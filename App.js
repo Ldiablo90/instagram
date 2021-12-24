@@ -5,9 +5,14 @@ import firebase from 'firebase/compat/app';
 import { getAuth, onAuthStateChanged} from 'firebase/auth'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk';
 
 import LandingScreen from "./components/auth/Landing"
 import RagisterScreen from "./components/auth/Register"
+import rootReducer from './redux/reducers'
+import MainScreen from './components/Main'
 
 const firebaseConfig = {
   apiKey: "AIzaSyD1MyUVpZat8OlUm4ul3UEVEvPOHqgWjNE",
@@ -18,6 +23,8 @@ const firebaseConfig = {
   appId: "1:814968229243:web:bb6f77e622e93825f6c1de",
   measurementId: "G-GW14GX3NNT"
 };
+
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 if(firebase.apps.length === 0 ){
   firebase.initializeApp(firebaseConfig)
@@ -68,9 +75,9 @@ export class App extends Component {
       )
     }
     return(
-      <View style={{ flex:1, justifyContent: 'center' }}>
-        <Text>User is logged in</Text>
-      </View>
+      <Provider store={store}>
+        <MainScreen/>
+      </Provider>
     )
   }
 }

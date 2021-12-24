@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { View, Button, TextInput } from 'react-native'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { doc, setDoc } from "firebase/firestore";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+
+
 
 export class Register extends Component {
     constructor(props) {
@@ -13,17 +15,15 @@ export class Register extends Component {
             name:''
         }
         this.onSignUp = this.onSignUp.bind(this)
-    }
+    };
+    
     onSignUp(){
         const { email, password, name } = this.state;
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
-            .then((result) => {
-                setDoc(doc(db, "users", auth.currentUser.uid), {
-                    name:name,
-                    email:email
-                  }).then(console.log("connect")).catch(e)(console.log("err",e));
-                console.log(result);
+            .then(function (result) {
+                var db = getFirestore();
+                setDoc(doc(db, "users",auth.currentUser.uid),{ name, email })
              })
             .catch((err)=> { console.log("out",err) })
     }
