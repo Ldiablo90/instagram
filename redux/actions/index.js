@@ -6,7 +6,8 @@ import { USER_STATE_CHANGE } from '../constants/index'
 export function fetchUser () {
     const db = getFirestore();
     const auth = getAuth();
-    return ((dispatch)=>{
+
+    return (dispatch) =>{
         getDoc(doc(db, 'users', auth.currentUser.uid))
         .then((snapshot) => {
             if(snapshot.exists){
@@ -15,5 +16,5 @@ export function fetchUser () {
                 console.log('does not exist')
             }
         })
-    })
+    }
 }
