@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { View, Text } from 'react-native'
-import firebase from 'firebase/compat/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import firebase from 'firebase'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk';
@@ -12,10 +11,10 @@ import thunk from 'redux-thunk';
 import LandingScreen from "./components/auth/Landing"
 import RagisterScreen from "./components/auth/Register"
 import LoginScreen from "./components/auth/Login"
-import rootReducer from './redux/reducers'
 import MainScreen from './components/Main'
 import AddScreen from './components/main/Add'
 import SaveScreen from './components/main/Save'
+import rootReducer from './redux/reducers'
 
 const firebaseConfig = {
   apiKey: "AIzaSyD1MyUVpZat8OlUm4ul3UEVEvPOHqgWjNE",
@@ -28,7 +27,7 @@ const firebaseConfig = {
 };
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
-
+console.log(firebase);
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig)
   console.log('initializeApp')
@@ -44,8 +43,7 @@ export class App extends Component {
     }
   }
   componentDidMount() {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.setState({
           loggedIn: false,
@@ -83,8 +81,8 @@ export class App extends Component {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Add" component={AddScreen}  navigation={this.props.navigation}/>
-            <Stack.Screen name="Save" component={SaveScreen} />
+            <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation} />
+            <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

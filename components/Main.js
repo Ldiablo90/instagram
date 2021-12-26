@@ -8,19 +8,20 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
-import { fetchUser } from '../redux/actions/index'
+import { fetchUser, fetchUserPosts } from '../redux/actions/index'
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 
 
 const Tab = createMaterialBottomTabNavigator();
 const EmptyScreen = () => { return (null)}
+
 export class Main extends Component {
     componentDidMount() {
         this.props.fetchUser();
+        this.props.fetchUserPosts();
     }
     render() {
-
         return (
             <Tab.Navigator initialRouteName='Feed' labeled={false}>
                 <Tab.Screen name="Feed" component={FeedScreen} options={
@@ -59,7 +60,7 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts }, dispatch);
 
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

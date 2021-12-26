@@ -1,10 +1,29 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image, FlatList, StyleSheet } from 'react-native'
 
-export default function Profile() {
+import { connect } from 'react-redux';
+
+function Profile(props) {
+    const { currentUser, posts } = props;
+    console.log({currentUser, posts})
     return (
-        <View>
-            <Text>Profile</Text>
+        <View style={styles.container}>
+            <Text>Frofile</Text>
+            <Text></Text>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        marginTop: 40
+    }
+})
+
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser,
+    posts: store.userState.posts
+})
+
+export default  connect(mapStateToProps, null)(Profile)
