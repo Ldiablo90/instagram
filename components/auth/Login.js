@@ -32,7 +32,7 @@ export class Login extends Component {
                     onChangeText={(password) => this.setState({ password })}
                 />
                 <Button
-                    onPress={() => this.onSignUp()}
+                    onPress={() => this.onSignIn()}
                     title='Sign In'
                 />
             </View>
