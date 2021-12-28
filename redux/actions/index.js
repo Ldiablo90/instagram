@@ -52,3 +52,9 @@ export function fetchUserFollowing() {
             })
     }
 }
+
+export function fetchUsersData(uid){
+    return ((dispatch, getState) => {
+        const found = getState().usersState
+    })
+}

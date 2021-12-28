@@ -43,17 +43,9 @@ function Profile(props) {
                 })
                 .catch((err) => { console.log(`dose not exist ${err}`) })
         }
-        if(props.following.findIndex((e) => e.id === props.route.params.uid ) > -1 ){
-            setFollowing(true);
-            console.log('over -1')
-        }else{
+        props.following.findIndex((e) => e.id === props.route.params.uid ) > -1 ?
+            setFollowing(true):
             setFollowing(false);
-            console.log('not over -1')
-        }
-        props.following.forEach(element => {
-            console.log(element)
-            console.log(props.route.params.uid)
-        });
 
     }, [props.route.params.uid, props.following])
 
