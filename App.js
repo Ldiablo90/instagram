@@ -27,7 +27,6 @@ const firebaseConfig = {
 };
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
-console.log(firebase);
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig)
   console.log('initializeApp')

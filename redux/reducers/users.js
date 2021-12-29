@@ -1,9 +1,8 @@
-import { USERS_DATA_STATE_CHANGE, USERS_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE } from "../constants"
+import { USERS_DATA_STATE_CHANGE, USERS_POSTS_STATE_CHANGE } from "../constants"
 
 const initialState = {
-    currentUser: null,
     users: [],
-    userLoaded:0,
+    userLoaded: 0,
 
 }
 export const users = (state = initialState, action) => {
@@ -16,13 +15,12 @@ export const users = (state = initialState, action) => {
         case USERS_POSTS_STATE_CHANGE:
             return {
                 ...state,
-                posts: action.posts
+                usersLoaded: state.userLoaded + 1,
+                users: state.users.map(user => user.uid === action.uid?
+                    {...user, posts: action.posts }:
+                    user)
             }
-        case USER_FOLLOWING_STATE_CHANGE:
-            return {
-                ...state,
-                following: action.following
-            }
+       
         default:
             return state;
 
