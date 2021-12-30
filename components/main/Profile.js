@@ -9,10 +9,10 @@ function Profile(props) {
     const [userPosts, setUserPosts] = useState([])
     const [user, setUser] = useState(null)
     const [following, setFollowing] = useState(false)
-
+    
+    console.log(props)
     useEffect(() => {
         const { currentUser, posts } = props;
-        
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
             setUser(currentUser)
             setUserPosts(posts)
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (store) => ({
+const mapStateToProps =  (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
     following: store.userState.following

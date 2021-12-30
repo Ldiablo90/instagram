@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE } from '../constants/index'
+import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE } from '../constants/index'
 
 export function fetchUser() {
 
@@ -12,6 +12,7 @@ export function fetchUser() {
                 if (snapshot.exists) {
                     dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() })
                 }
+                console.log(snapshot)
             })
             .catch((err) => { console.log(`dose not exist ${err}`) })
     }
@@ -48,12 +49,11 @@ export function fetchUserFollowing() {
                     const id = doc.id;
                     return { id } 
                 });
-                console.log(following);
                 dispatch({type: USER_FOLLOWING_STATE_CHANGE, following});
-                for(let i = 0; i < following.length; i++){
-                    console.log(following[i])
-                    dispatch(fetchUsersData(following[i].id))
-                }
+                following.forEach((follow)=>{
+                    dispatch(fetchUsersData(follow.id))
+                })
+                
             })
     }
 }
@@ -61,7 +61,6 @@ export function fetchUserFollowing() {
 export function fetchUsersData(uid){
     return ((dispatch, getState) => {
         const found = getState().usersState.users.some(el => el.uid === uid);
-        console.log(found);
         if(!found) {
             firebase.firestore()
             .collection('users')
@@ -71,9 +70,8 @@ export function fetchUsersData(uid){
                 if (snapshot.exists) {
                     let user = snapshot.data();
                     user.uid = snapshot.id;
-
                     dispatch({ type: USERS_DATA_STATE_CHANGE, user })
-                    dispatch(fetchUsersFollowingPosts(user.id));
+                    dispatch(fetchUsersFollowingPosts(user.uid));
                 }
             })
             .catch((err) => { console.log(`dose not exist ${err}`) })
@@ -90,18 +88,13 @@ export function fetchUsersFollowingPosts(uid) {
             .orderBy('creation', 'asc')
             .get()
             .then((snapshot) => {
-                console.log(snapshot)
-                const uid = snapshot.query.EP.path.segments[1];
-                console.log({ snapshot, uid });
                 const user = getState().usersState.users.find(el => el.uid === uid);
-
                 let posts = snapshot.docs.map(doc =>{
                     const data = doc.data();
                     const id = doc.id;
                     return { id, ...data, user }
                 });
-                dispatch({type: USERS_POSTS_STATE_CHANGE, posts, uid})
-                console.log(getState())
+                dispatch({type: USERS_POSTS_STATE_CHANGE, posts, uid })
             })
             .catch((err) => { console.log(`dose not exist ${err}`) })
         }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
@@ -14,15 +14,17 @@ import SearchScreen from './main/Search'
 const Tab = createMaterialBottomTabNavigator();
 const EmptyScreen = () => { return (null) }
 
+
 export class Main extends Component {
     componentDidMount() {
         this.props.fetchUser();
         this.props.fetchUserPosts();
         this.props.fetchUserFollowing();
+        console.log(this.props);
     }
     render() {
         return (
-            <Tab.Navigator initialRouteName='Feed' labeled={false}>
+            <Tab.Navigator initialRouteName='Profile' labeled={false}>
                 <Tab.Screen name="Feed" component={FeedScreen} options={
                     {
                         tabBarIcon: ({ color, size }) => (

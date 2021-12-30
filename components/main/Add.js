@@ -41,6 +41,7 @@ export default function Add({ navigation }) {
         }
     }
 
+    
     if (hasCameraPermission === null || hasGalleryPermission === false) {
         return <View />;
     }
