@@ -24,7 +24,6 @@ function Feed(props) {
             setPosts(posts);
         }else{console.log('not same',props)}
     }, [props.usersLoaded])
-
     return (
         <View style={styles.container}>
 
@@ -81,4 +80,4 @@ const mapStateToProps = (store) => ({
     usersLoade: store.usersState.usersLoaded
 })
 
-export default connect(mapStateToProps, null)(Feed)
+export default connect(mapStateToProps,null)(Feed)

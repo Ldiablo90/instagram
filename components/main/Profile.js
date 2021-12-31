@@ -9,10 +9,10 @@ function Profile(props) {
     const [userPosts, setUserPosts] = useState([])
     const [user, setUser] = useState(null)
     const [following, setFollowing] = useState(false)
-    
-    console.log(props)
+
     useEffect(() => {
         const { currentUser, posts } = props;
+        console.log(props.route.params.uid)
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
             setUser(currentUser)
             setUserPosts(posts)
@@ -23,7 +23,7 @@ function Profile(props) {
                 .get()
                 .then((snapshot) => {
                     if (snapshot.exists) {
-                        setUser( snapshot.data())
+                        setUser(snapshot.data())
                     }
                 })
                 .catch((err) => { console.log(`dose not exist ${err}`) })
@@ -39,12 +39,12 @@ function Profile(props) {
                         const id = doc.id;
                         return { id, ...data }
                     });
-                    setUserPosts( posts )
+                    setUserPosts(posts)
                 })
                 .catch((err) => { console.log(`dose not exist ${err}`) })
         }
-        props.following.findIndex((e) => e.id === props.route.params.uid ) > -1 ?
-            setFollowing(true):
+        props.following.findIndex((e) => e.id === props.route.params.uid) > -1 ?
+            setFollowing(true) :
             setFollowing(false);
 
     }, [props.route.params.uid, props.following])
@@ -66,6 +66,10 @@ function Profile(props) {
             .delete()
     }
 
+    const onLogout = () => {
+        firebase.auth().signOut();
+    }
+
     if (user === null) {
         return <View></View>
     }
@@ -75,23 +79,27 @@ function Profile(props) {
                 <Text>{user.name}</Text>
                 <Text>{user.email}</Text>
                 {
-                    props.route.params.uid !== firebase.auth().currentUser.uid? (
+                    props.route.params.uid !== firebase.auth().currentUser.uid ? (
                         <View>
-                            {following? 
-                            (
-                                <Button
-                                    title='UnFollowing'
-                                    onPress={()=>onUnFollow()}
-                                />
-                            ):
-                            (
-                                <Button
-                                    title='Follow'
-                                    onPress={()=>onFollow()}
-                                />
-                            )}
+                            {following ?
+                                (
+                                    <Button
+                                        title='UnFollowing'
+                                        onPress={() => onUnFollow()}
+                                    />
+                                ) :
+                                (
+                                    <Button
+                                        title='Follow'
+                                        onPress={() => onFollow()}
+                                    />
+                                )}
                         </View>
-                    ): null
+                    ) : 
+                        <Button
+                            title='Logout'
+                            onPress={() => onLogout()}
+                        />
                 }
             </View>
             <View style={styles.containerGallery}>
@@ -135,7 +143,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps =  (store) => ({
+const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
     following: store.userState.following
